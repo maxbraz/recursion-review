@@ -4,7 +4,6 @@
 // but you don't so you're going to write it from scratch:
 
 var stringifyJSON = function(obj) {
-  //find out the data type number, strings, boolean, function, undefined, and null
   if (typeof(obj) === 'number') {
   	return obj.toString();
   }
@@ -21,7 +20,6 @@ var stringifyJSON = function(obj) {
   	return '"' + obj + '"';
   }
 
-  //if the constructor is an array
   if (Array.isArray(obj)) {
   	var tempArray = [];
 
@@ -32,22 +30,26 @@ var stringifyJSON = function(obj) {
   	return '[' + tempArray.toString() + ']';
   }
 
-  //if the constructor is an object
-  if (obj.constructor === Object) {
+  if (obj === Object(obj)) {
   	var objectString = '{';
-  	console.log(objectString)
 
-
+  	if (Object.keys(obj).length === 0) {
+  		return '{}';
+  	}
 
   	for (var key in obj) {
-  		if (key === undefined) {
-  			return '{}';
-  		}
-  		console.log(key)
+
+  		if (obj[key] === undefined || typeof(obj[key]) === 'function'){
+  		  continue;
+  		} 
+  		
   		objectString += stringifyJSON(key) + ':' + stringifyJSON(obj[key]) + ',';
   	}
 
-  	objectString = objectString.slice(0, -1);
-  	return objectString
+  	if (objectString.slice(-1) === ',') { 
+  		objectString = objectString.slice(0, -1) ;
+    }
+
+  	return objectString + '}';
   }
 };
